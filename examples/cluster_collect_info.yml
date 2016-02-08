@@ -4,7 +4,8 @@
 # the specified Couchbase Server cluster nodes with cbcollect_info
 
 - hosts: cluster_nodes
-  sudo: True
+  become: yes
+  become_user: root
   vars_files:
     - ../defaults/main.yml
 
@@ -17,4 +18,4 @@
     fetch: "src={{ couchbase_server_cbcollect_path }}/{{ ansible_hostname }}.zip dest=var/cbcollect_info/{{ ansible_hostname }}.zip flat=yes"
 
   - name: Cleanup
-    shell: "rm -rf {{ couchbase_server_cbcollect_path }}/{{ ansible_hostname }}.zip"
+    file: "path={{ couchbase_server_cbcollect_path }}/{{ ansible_hostname }}.zip state=absent"

@@ -4,9 +4,9 @@
 ## Couchbase Server Enterprise Edition
 
 - name: Download package locally
-  sudo: False
+  become: no
   connection: local
-  get_url: "url={{ couchbase_server_debian_ee_url }} dest=../files/{{ couchbase_server_debian_ee_package }} sha256sum={{ couchbase_server_debian_ee_sha256 }} timeout=240"
+  get_url: "url={{ couchbase_server_debian_ee_url }} dest={{ role_path }}/files/{{ couchbase_server_debian_ee_package }} sha256sum={{ couchbase_server_debian_ee_sha256 }} timeout=240"
   run_once: true
   when: couchbase_server_edition == "enterprise" and couchbase_server_local_package != true
   tags: installation
@@ -17,12 +17,15 @@
   tags: installation
 
 - name: Install package
+  become: yes
+  become_user: root
   apt: "deb=/tmp/{{ couchbase_server_debian_ee_package }} state=present"
   when: couchbase_server_edition == "enterprise"
   tags: installation
 
 - name: Package file cleanup
-  sudo: True
+  become: yes
+  become_user: root
   file: "dest=/tmp/{{ couchbase_server_debian_ee_package }} state=absent"
   when: couchbase_server_edition == "enterprise"
   tags: installation
@@ -30,9 +33,9 @@
 ## Couchbase Server Community Edition
 
 - name: Download package locally
-  sudo: False
+  become: no
   connection: local
-  get_url: "url={{ couchbase_server_debian_ce_url }} dest=../files/{{ couchbase_server_debian_ce_package }} sha256sum={{ couchbase_server_debian_ce_sha256 }} timeout=240"
+  get_url: "url={{ couchbase_server_debian_ce_url }} dest={{ role_path }}/files/{{ couchbase_server_debian_ce_package }} sha256sum={{ couchbase_server_debian_ce_sha256 }} timeout=240"
   run_once: true
   when: couchbase_server_edition == "community" and couchbase_server_local_package != true
   tags: installation
@@ -43,12 +46,15 @@
   tags: installation
 
 - name: Install package
+  become: yes
+  become_user: root
   apt: "deb=/tmp/{{ couchbase_server_debian_ce_package }} state=present"
   when: couchbase_server_edition == "community"
   tags: installation
 
 - name: Package file cleanup
-  sudo: True
+  become: yes
+  become_user: root
   file: "dest=/tmp/{{ couchbase_server_debian_ce_package }} state=absent"
   when: couchbase_server_edition == "community"
   tags: installation
